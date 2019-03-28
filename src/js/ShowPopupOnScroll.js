@@ -8,9 +8,8 @@ export class ShowPopupOnScroll{
         this.show = this._validateConfig(config, this.constructor._getAllowedConfigProperties()[3], false);
 
         this.shownTimes = 0;
-        this.nScrolls = document.body.offsetHeight / innerHeight;
-        this.lastScrollAmount = innerHeight * (this.nScrolls - Math.floor(this.nScrolls));
-        this.threshold = document.body.offsetHeight - this.lastScrollAmount;
+        this.thresholdPosition = this._validateConfig(config, this.constructor._getAllowedConfigProperties()[4], 'first');
+        this.threshold = this._getThreshold(this.thresholdPosition);
         this.userPosition = scrollY + innerHeight;
         this._isBootstrapModal();
 
@@ -34,7 +33,8 @@ export class ShowPopupOnScroll{
             'breakpoint',
             'showTimes',
             'backdrop',
-            'show'
+            'show',
+            'thresholdPosition'
         ];
     }
 
@@ -54,7 +54,7 @@ export class ShowPopupOnScroll{
             window.addEventListener('keyup', key => {
                 if(key.key.toUpperCase() === 'ESCAPE')
                     this._onCloseEvent();
-                });
+            });
         }else throw "Breakpoint option must be greater then 0.";
     }
 
@@ -68,8 +68,8 @@ export class ShowPopupOnScroll{
 
     _showOnStart(){
         if(this.show){
-             this._showBackdrop();
-             this.popup('show');
+            this._showBackdrop();
+            this.popup('show');
         }
         else {
             this.shownTimes = -1;
@@ -81,23 +81,55 @@ export class ShowPopupOnScroll{
         if(this.popupElement.classList.contains('modal')){
             //remove close event on button
             const modalCloseBnt = document.querySelector('.modal.popup button.close');
-                  modalCloseBnt.attributes["data-dismiss"].value = "";
-                  modalCloseBnt.classList.remove('close');
-                  modalCloseBnt.classList.add(this.constructor._getClasses().popupCloseBtn.replace('.', ''));
+            modalCloseBnt.attributes["data-dismiss"].value = "";
+            modalCloseBnt.classList.remove('close');
+            modalCloseBnt.classList.add(this.constructor._getClasses().popupCloseBtn.replace('.', ''));
 
             $(this.popupElement).modal({
                 backdrop: false,
                 keyboard: false,
-                show: true
+                show: false
             });
 
-            document.querySelector('body').classList.remove('modal-open');
+            setTimeout(() => {
+                $(this.popupElement).modal('show');
+                document.querySelector('body').style.paddingRight = '0';
+                document.querySelector('body').classList.remove('modal-open');
+            }, 100);
         }
+    }
+
+    _getThreshold(mode = 'last'){
+        /*
+        * mode values
+        * => last = attiva la visualizzazione del popup quando l'utente raggiunge l'ultimo scroll dell'intero sito
+        * => first = attiva la visualizzazione del popup quando l'utente supera il primo scroll del sito
+        * => mid = attiva la visualizzazione del popup quando l'utente arriva allo scroll centrale (es scroll del sito 5, la visualizzazione si attiva al 3 scroll)
+        * */
+        let threshold = undefined;
+        const nScrolls = document.body.offsetHeight / innerHeight;
+
+        switch (mode){
+            default :
+            case 'first':
+
+                break;
+            case 'mid':
+
+                break;
+            case 'last':
+                const lastScrollAmount = innerHeight * (nScrolls - Math.floor(nScrolls));
+                threshold = document.body.offsetHeight - lastScrollAmount;
+                break;
+        }
+
+
+        return threshold;
     }
 
     _createBackdrop(){
         const backdropElement = document.createElement('div');
-              backdropElement.classList.add(this.constructor._getClasses().popupBackdrop.replace('.',''));
+        backdropElement.classList.add(this.constructor._getClasses().popupBackdrop.replace('.',''));
 
         document.body.insertAdjacentElement('beforeend', backdropElement);
         document.body.style.overflowY = 'hidden';

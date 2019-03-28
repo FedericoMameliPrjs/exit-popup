@@ -1,12 +1,12 @@
-//import ShowPopupOnScroll from './ShowPopupOnScroll';
+//window.ShowPopupOnScroll = require('./ShowPopupOnScroll').ShowPopupOnScroll;
+//window.EdgePopup = require('./EdgePopup').EdgePopup;
 
-window.ShowPopupOnScroll = require('./ShowPopupOnScroll').ShowPopupOnScroll;
-//$('.modal').modal('show');
-/*const a = new ShowPopupOnScroll({
-    breakpoint: 768,
-    backdrop: true,
-    show: true,
-    showTimes: 5
+require('./mobileCheck');
+require('./TouchDirectionEvent');
 
+window.ExitPopup = require('./ExitPopup').ExitPopup;
+
+window.a = new ExitPopup({
+    position: 'bottom',
+    backdrop: 1
 });
-console.log(a);*/

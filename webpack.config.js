@@ -1,11 +1,12 @@
 var path = require('path');
 var webpack = require('webpack');
+var htmlWebpackPlugin = require('html-webpack-plugin');
 var miniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     entry: {
-        exitPopup: ['./src/js/index.js', './src/css/test.style.css']
+        exitPopup: ['./src/js/index.js', './src/css/exit-popup.style.css']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -36,11 +37,11 @@ module.exports = {
         /*new webpack.ProvidePlugin({
             $: 'jquery/dist/jquery.slim.min',
             jQuery: 'jquery/dist/jquery.slim.min'
-        }),
+        }),*/
         new htmlWebpackPlugin({
             filename: 'index.html',
             template: './index.html'
-        }),*/
+        }),
         new miniCssExtractPlugin({
             filename: process.env.NODE_ENV === 'production' ? '[name].min.css' : '[name].dev.css'
         })
