@@ -6,7 +6,7 @@ export class ExitPopup{
         this.position = this._validateConfig(config, 'position', 'top');
         this.showOnStart = this._validateConfig(config, 'showOnStart', false);
         this.backdrop = this._validateConfig(config, 'backdrop', true);
-        this.threshold = this._validateConfig(config, 'threshold', 'first');
+        //this.threshold = this._validateConfig(config, 'threshold', 'first');//mobile only
         this.popupShown = false;
 
 
@@ -111,16 +111,16 @@ export class ExitPopup{
         closeBtnEl.removeEventListener('click', this._hidePopup.bind(this));
     }
 
-    _setScrollEvents(){
-        if(this.isTouchDevice){
+    _setScrollEvents() {
+        if (this.isTouchDevice) {
             document.addEventListener('touchdirection', event => {
-               if(event.detail.touchDirection === 'bottom' && !this.popupShown)
-                  this._showPopup();
+                if (event.detail.touchDirection === 'bottom' && !this.popupShown)
+                    this._showPopup();
             });
         }
-        else{
+        else {
             document.addEventListener('mousemove', event => {
-                if(event.clientY <= 10 && !this.popupShown)
+                if (event.clientY <= 10 && !this.popupShown)
                     this._showPopup();
             });
         }

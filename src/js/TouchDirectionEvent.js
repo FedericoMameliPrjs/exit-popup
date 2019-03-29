@@ -11,6 +11,6 @@
     document.addEventListener('touchend', function(){
         touchDirection = touchStartY > touchEndY ? 'top' : 'bottom';
 
-        document.dispatchEvent(new CustomEvent('touchdirection', {detail:{touchDirection}}));
+        document.dispatchEvent(new CustomEvent('touchdirection', {detail:{touchDirection, touchStartY, touchEndY}}));
     });
 })();
