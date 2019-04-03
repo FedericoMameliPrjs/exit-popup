@@ -5,5 +5,4 @@ require('./mobileCheck');
 require('./TouchDirectionEvent');
 
 window.ExitPopup = require('./ExitPopup').ExitPopup;
-
-new ExitPopup();
+new ExitPopup({position: 'bottom'});

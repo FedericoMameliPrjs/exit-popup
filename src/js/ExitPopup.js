@@ -151,6 +151,7 @@ export class ExitPopup{
         backdropElement.classList.add(this._getCssClasses().backdrop.replace('.',''));
 
         document.body.insertAdjacentElement('beforeend', backdropElement);
+        setTimeout(() => backdropElement.style.opacity = 1 , 200);
         document.body.style.overflowY = 'hidden';
     }
 
