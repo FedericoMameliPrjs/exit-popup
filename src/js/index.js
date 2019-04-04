@@ -5,4 +5,7 @@ require('./mobileCheck');
 require('./TouchDirectionEvent');
 
 window.ExitPopup = require('./ExitPopup').ExitPopup;
-new ExitPopup({position: 'bottom'});
+
+if(process.env.NODE_ENV === 'development'){
+    new ExitPopup({touch: 'top', desk: 'center'});
+}

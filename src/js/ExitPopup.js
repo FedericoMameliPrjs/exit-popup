@@ -3,7 +3,7 @@ export class ExitPopup{
     constructor(config = {}){
         this.popupEl = this._getPopupElement();
         this.isTouchDevice = this._checkScreenDeviceType();
-        this.position = this._validateConfig(config, 'position', 'top');
+        this.position = this._validateConfig(config, 'position', {touch: 'bottom', desk: 'top'});
         this.showOnStart = this._validateConfig(config, 'showOnStart', false);
         this.backdrop = this._validateConfig(config, 'backdrop', true);
         //this.threshold = this._validateConfig(config, 'threshold', 'first');//mobile only
@@ -37,7 +37,7 @@ export class ExitPopup{
     }
 
     _getAllowedConfigProperties(){
-        return ['showOnStart', 'backdrop', 'position', 'threshold'];
+        return ['showOnStart', 'backdrop', 'position'];
     }
 
     _getPopupElement(){
@@ -60,6 +60,10 @@ export class ExitPopup{
     /*===DEVICE TYPE===*/
     _checkScreenDeviceType(){
         return (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) || mobileCheck();
+    }
+
+    _setPosition(){
+        this.position = this.isTouchDevice ? this.position.touch : this.position.desk;
     }
 
     /*===RESET BOOTSTRAP MODAL===*/
@@ -88,6 +92,7 @@ export class ExitPopup{
     }
 
     _setPopupPosition(){
+        //const positionVal = this.isTouchDevice ? this.position.touch : this.position.desk;
         this.popupEl.classList.add(this._getCssClasses().position[this.position].replace('.', ''));
     }
 
@@ -134,6 +139,7 @@ export class ExitPopup{
     }
 
     _initPopup(){
+        this._setPosition();
         //check if the popup is a bootstrap modal
         this._resetBootstrapModal();
 

@@ -3,12 +3,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     transition: all ease-out .6s;
-    z-index: 1000000001;
+    z-index: 2000;
     overflow: auto;
 }
 
 /*BOOTSTRAP OVERRIDE*/
 .modal.exit-popup{
+    width: 100%;
     top: unset;
     right: unset;
     bottom: unset;
@@ -53,7 +54,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(90,90,90,.6);
-    z-index: 1000000000;
+    z-index: 1000;
 }
 
 @keyframes fade-in {
