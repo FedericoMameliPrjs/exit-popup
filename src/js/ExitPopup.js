@@ -1,3 +1,5 @@
+import {name, version} from "../../package.json";
+
 export class ExitPopup{
 
     constructor(config = {}){
@@ -13,6 +15,8 @@ export class ExitPopup{
     }
 
     /*===GETS===*/
+    getVersion(){ return `Exit Modal v${version}`; }
+
     _getCssClasses(){
         return{
             exitPopup: '.exit-popup',

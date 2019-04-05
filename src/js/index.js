@@ -9,6 +9,8 @@ window.ExitPopup = require('./ExitPopup').ExitPopup;
 if(process.env.NODE_ENV === 'development'){
     const exitModal = new ExitPopup({touch: 'top', desk: 'center'});
 
+    console.log('%c' + exitModal.getVersion(), 'background: orange; padding: .5rem; border-radius:5px;');
+
     exitModal.getExitModalElement().addEventListener('exitmodal.shown', function(){
         console.log('ExitModal shown');
     });
