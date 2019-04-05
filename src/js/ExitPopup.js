@@ -9,7 +9,6 @@ export class ExitPopup{
         //this.threshold = this._validateConfig(config, 'threshold', 'first');//mobile only
         this.popupShown = false;
 
-
         this._initPopup();
     }
 
@@ -46,6 +45,17 @@ export class ExitPopup{
             console.error('ExitPopup Error: element not found.');
 
         return el;
+    }
+
+    getExitModalElement(){
+        return this.popupEl;
+    }
+
+    _getEvents(){
+        return {
+            shown: new Event('exitmodal.shown'),
+            hidden: new Event('exitmodal.hidden')
+        }
     }
 
     /*===constructor config===*/
@@ -172,14 +182,16 @@ export class ExitPopup{
 
     _showPopup(){
         //mostro backdrop
-        if(this.backdrop)
-            this._createBackdrop();
-
+        if(this.backdrop) this._createBackdrop();
 
         this._setCloseEvents();
 
         this.popupEl.classList.remove(this._getCssClasses().visibility[this.position].hide.replace('.', ''));
         this.popupEl.classList.add(this._getCssClasses().visibility[this.position].show.replace('.', ''));
+
+        //emit open event
+        this.popupEl.dispatchEvent(this._getEvents().shown);
+
         this.popupShown = true;
     }
 
@@ -191,6 +203,9 @@ export class ExitPopup{
 
         this.popupEl.classList.remove(this._getCssClasses().visibility[this.position].show.replace('.', ''));
         this.popupEl.classList.add(this._getCssClasses().visibility[this.position].hide.replace('.', ''));
+
+        //emit open event
+        this.popupEl.dispatchEvent(this._getEvents().hidden);
     }
 }
 
