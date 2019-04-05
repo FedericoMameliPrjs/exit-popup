@@ -1,6 +1,6 @@
 import {name, version} from "../../package.json";
 
-export class ExitPopup{
+export class ExitModal{
 
     constructor(config = {}){
         this.popupEl = this._getPopupElement();
@@ -19,9 +19,9 @@ export class ExitPopup{
 
     _getCssClasses(){
         return{
-            exitPopup: '.exit-popup',
-            popupCloseBtn: '.exit-popup-close',
-            backdrop: '.exit-popup-backdrop',
+            exitPopup: '.exit-modal',
+            popupCloseBtn: '.exit-modal-close',
+            backdrop: '.exit-modal-backdrop',
             visibility:{
                 top: {show: '.showDown', hide: '.hideUp'},
                 center: {show: '.showDown', hide: '.hideUp'},
@@ -46,7 +46,7 @@ export class ExitPopup{
     _getPopupElement(){
         let el = document.querySelector(this._getCssClasses().exitPopup);
         if(!el)
-            console.error('ExitPopup Error: element not found.');
+            console.error('ExitModal Error: element not found.');
 
         return el;
     }

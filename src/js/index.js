@@ -4,10 +4,10 @@
 require('./mobileCheck');
 require('./TouchDirectionEvent');
 
-window.ExitPopup = require('./ExitPopup').ExitPopup;
+window.ExitModal = require('./ExitModal').ExitModal;
 
 if(process.env.NODE_ENV === 'development'){
-    const exitModal = new ExitPopup({touch: 'top', desk: 'center'});
+    const exitModal = new ExitModal({touch: 'top', desk: 'center'});
 
     console.log('%c' + exitModal.getVersion(), 'background: orange; padding: .5rem; border-radius:5px;');
 
