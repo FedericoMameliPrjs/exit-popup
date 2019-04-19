@@ -7,7 +7,10 @@ require('./TouchDirectionEvent');
 window.ExitModal = require('./ExitModal').ExitModal;
 
 if(process.env.NODE_ENV === 'development'){
-    const exitModal = new ExitModal({touch: 'top', desk: 'center'});
+    const exitModal = new ExitModal({
+        position: {touch: 'top', desk: 'center'},
+        showAfter: 1000
+    });
 
     console.log('%c' + exitModal.getVersion(), 'background: orange; padding: .5rem; border-radius:5px;');
 

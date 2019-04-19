@@ -1,5 +1,15 @@
 import {name, version} from "../../package.json";
 
+
+/*
+* class ExitModal
+* @param config => (Object)
+*   - position : (Object) Definisce la posizione del modal, separatamente per dispositivi touch e desktop
+*   - showOnStart: (Boolean) Mostra il modal al caricamento della pagina
+*   - backdrop: (Boolean) Mostra o nasconde il backdrop
+*   -showAfter: (Number) il modal viene mostrato dopo n secondi / default 0
+*
+* */
 export class ExitModal{
 
     constructor(config = {}){
@@ -8,6 +18,7 @@ export class ExitModal{
         this.position = this._validateConfig(config, 'position', {touch: 'bottom', desk: 'top'});
         this.showOnStart = this._validateConfig(config, 'showOnStart', false);
         this.backdrop = this._validateConfig(config, 'backdrop', true);
+        this.showAfter = this._validateConfig(config, 'showAfter', 0);
         //this.threshold = this._validateConfig(config, 'threshold', 'first');//mobile only
         this.popupShown = false;
 
@@ -40,7 +51,7 @@ export class ExitModal{
     }
 
     _getAllowedConfigProperties(){
-        return ['showOnStart', 'backdrop', 'position'];
+        return ['showOnStart', 'backdrop', 'position', 'showAfter'];
     }
 
     _getPopupElement(){
@@ -59,6 +70,12 @@ export class ExitModal{
         return {
             shown: new Event('exitmodal.shown'),
             hidden: new Event('exitmodal.hidden')
+        }
+    }
+
+    _getErrors(){
+        return{
+            configNotValid: ''
         }
     }
 
@@ -130,19 +147,43 @@ export class ExitModal{
         closeBtnEl.removeEventListener('click', this._hidePopup.bind(this));
     }
 
-    _setScrollEvents() {
-        if (this.isTouchDevice) {
-            document.addEventListener('touchdirection', event => {
-                if (event.detail.touchDirection === 'bottom' && !this.popupShown)
-                    this._showPopup();
-            });
+    _triggerEvent(device){
+        let fn;
+
+        switch (device.toLowerCase()) {
+            case 'touch':
+                fn = event => {
+                    if (event.detail.touchDirection === 'bottom' && !this.popupShown)
+                        this._showPopup();
+                };
+                break;
+            case 'desktop':
+                fn = event => {
+                    if (event.clientY <= 10 && !this.popupShown)
+                        this._showPopup();
+                };
+                break;
         }
-        else {
-            document.addEventListener('mousemove', event => {
-                if (event.clientY <= 10 && !this.popupShown)
-                    this._showPopup();
-            });
-        }
+
+        return fn;
+    }
+
+    _setScrollEvents(){
+        const event = {
+            name: this.isTouchDevice ? 'touchdirection' : 'mousemove',
+            fn: this._triggerEvent(this.isTouchDevice ? 'touch' : 'desktop')
+        };
+
+        document.addEventListener(event.name, event.fn);
+    }
+
+    _removeScrollEvents(){
+        const event = {
+            name: this.isTouchDevice ? 'touchdirection' : 'mousemove',
+            fn: this._triggerEvent(this.isTouchDevice ? 'touch' : 'desktop')
+        };
+
+        document.removeEventListener(event.name, event.fn);
     }
 
     _showOnStart(){
@@ -152,10 +193,22 @@ export class ExitModal{
             this.popupEl.classList.add(this._getCssClasses().visibility[this.position].hide.replace('.', ''));
     }
 
+    _createCloseBtn(){
+        if(!this.popupEl.querySelector(this._getCssClasses().popupCloseBtn)){
+            const closeBtn = document.createElement('button');
+                  closeBtn.classList.add(this._getCssClasses().popupCloseBtn.replace('.', ''));
+                  closeBtn.innerText = 'X';
+            this.popupEl.insertAdjacentElement('afterbegin', closeBtn);
+        }
+    }
+
     _initPopup(){
         this._setPosition();
+
         //check if the popup is a bootstrap modal
         this._resetBootstrapModal();
+
+        this._createCloseBtn();
 
         //set the position of popup
         this._setPopupPosition();
@@ -182,21 +235,28 @@ export class ExitModal{
         backdrop.addEventListener('transitionend', el => {
             document.body.removeChild(el.target);
         });
+
+        document.body.style.overflowY = 'initial';
     }
 
     _showPopup(){
-        //mostro backdrop
-        if(this.backdrop) this._createBackdrop();
-
-        this._setCloseEvents();
-
-        this.popupEl.classList.remove(this._getCssClasses().visibility[this.position].hide.replace('.', ''));
-        this.popupEl.classList.add(this._getCssClasses().visibility[this.position].show.replace('.', ''));
-
-        //emit open event
-        this.popupEl.dispatchEvent(this._getEvents().shown);
+        //rimuovo trigger per attivare popup
+        this._removeScrollEvents();
 
         this.popupShown = true;
+        //faccio partire timer e mostro popup
+        setTimeout(() => {
+            //mostro backdrop
+            if(this.backdrop) this._createBackdrop();
+
+            this._setCloseEvents();
+
+            this.popupEl.classList.remove(this._getCssClasses().visibility[this.position].hide.replace('.', ''));
+            this.popupEl.classList.add(this._getCssClasses().visibility[this.position].show.replace('.', ''));
+
+            //emit open event
+            this.popupEl.dispatchEvent(this._getEvents().shown);
+        }, this.showAfter);
     }
 
     _hidePopup(){
@@ -213,12 +273,3 @@ export class ExitModal{
     }
 }
 
-/*
-* config => {
-*   showOnStart :> Mostra il popup al caricamento della pagina [boolean|number]
-*   backdrop :> Mostra uno sfondo con click per chiudere il popup [boolean]
-*   position: Definisce la posizione del modal [String] => 'top' | 'bottom' ('top' default)
-*   threshold: Definisce una soglia che,  una volta superata,  mostra il modal [String] => 'first', 'center', 'last'
-* }
-*
-* */
