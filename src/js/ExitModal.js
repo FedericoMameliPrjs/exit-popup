@@ -66,10 +66,17 @@ export class ExitModal{
         return this.popupEl;
     }
 
+    _getEventsNames(){
+        return{
+            shown: 'exit-modal.shown',
+            hidden: 'exit-modal.hidden'
+        }
+    }
+
     _getEvents(){
         return {
-            shown: new Event('exitmodal.shown'),
-            hidden: new Event('exitmodal.hidden')
+            shown: new Event(this._getEventsNames().shown),
+            hidden: new Event(this._getEventsNames().hidden)
         }
     }
 
@@ -237,6 +244,14 @@ export class ExitModal{
         });
 
         document.body.style.overflowY = 'initial';
+    }
+
+    shown(fn){
+        this.popupEl.addEventListener(this._getEventsNames().shown, fn);
+    }
+
+    hidden(fn){
+        this.popupEl.addEventListener(this._getEventsNames().hidden, fn);
     }
 
     _showPopup(){
