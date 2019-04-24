@@ -19,7 +19,6 @@ export class ExitModal{
         this.showOnStart = this._validateConfig(config, 'showOnStart', false);
         this.backdrop = this._validateConfig(config, 'backdrop', true);
         this.showAfter = this._validateConfig(config, 'showAfter', 0);
-        //this.threshold = this._validateConfig(config, 'threshold', 'first');//mobile only
         this.popupShown = false;
 
         this._initPopup();
@@ -118,7 +117,8 @@ export class ExitModal{
             $(this.popupEl).modal({
                 backdrop: false,
                 keyboard: false,
-                show: false
+                show: false,
+                focus: false
             });
 
             setTimeout(() => {
@@ -126,7 +126,7 @@ export class ExitModal{
                 document.querySelector('body').style.paddingRight = '0';
                 document.querySelector('body').classList.remove('modal-open');
             }, 100);
-        }
+     p   }
     }
 
     _setPopupPosition(){
