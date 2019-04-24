@@ -5,6 +5,7 @@
     transition: all ease-out .6s;
     z-index: 2000;
     overflow: auto;
+    display: none;
 }
 
 /*BOOTSTRAP OVERRIDE*/

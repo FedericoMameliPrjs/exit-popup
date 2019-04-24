@@ -210,6 +210,7 @@ export class ExitModal{
     }
 
     _initPopup(){
+        this.popupEl.style.display = 'block';
         this._setPosition();
 
         //check if the popup is a bootstrap modal
@@ -239,9 +240,9 @@ export class ExitModal{
         const backdrop = document.querySelector(this._getCssClasses().backdrop);
         backdrop.removeEventListener('click', this._hidePopup.bind(this));
         backdrop.style.opacity = '0';
-        backdrop.addEventListener('transitionend', el => {
-            document.body.removeChild(el.target);
-        });
+        setTimeout(() => {
+            document.body.removeChild(backdrop);
+        }, 200);
 
         document.body.style.overflowY = 'initial';
     }
