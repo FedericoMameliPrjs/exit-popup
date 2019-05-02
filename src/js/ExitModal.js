@@ -126,7 +126,7 @@ export class ExitModal{
                 document.querySelector('body').style.paddingRight = '0';
                 document.querySelector('body').classList.remove('modal-open');
             }, 100);
-     p   }
+        }
     }
 
     _setPopupPosition(){
